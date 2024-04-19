@@ -5,7 +5,6 @@ import "izitoast/dist/css/iziToast.min.css";
 
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
-import css from './css/styles.css';
 
 import { imagesSearch } from './js/pixabay-api.js';
 import { createGallery } from './js/render-functions.js';
@@ -28,7 +27,8 @@ const loader = document.querySelector(".loader");
 
 function formSubmit(event) {
     event.preventDefault();
-    loader.style.display = 'block';
+    loader.style.display = 'flex';
+    loader.style.alignitems = 'center';
     if (input.value.trim() === '') {
         iziToast.warning({message: 'The name is incorrect. Please try again'});
         return;
@@ -39,7 +39,16 @@ function formSubmit(event) {
     imagesSearch(input.value.trim())
         .then(data => {
             if (data.totalHits === 0) {
-                iziToast.error({ message: 'Sorry, there are no images matching your search query. Please try again!', });
+                iziToast.error({
+                    message: 'Sorry, there are no images matching your search query. Please try again!',
+                    messageColor: 'rgba(250, 250, 251, 1)',
+                    icon: 'myIcon',
+                    iconColor:'rgba(250, 250, 251, 1)',
+                    color: 'rgba(239, 64, 64, 1)',
+                    position: 'topRight',
+                    progressBarColor:'rgba(181, 27, 27, 1)'
+
+                });
                 loader.style.display = 'none';
                 return;
             }
@@ -47,7 +56,7 @@ function formSubmit(event) {
             createGallery(data.hits, gallery);
             lightbox.refresh();
         })
-        .catch(() => iziToast.error({ message: 'Error', }))
+        .catch(() => iziToast.show({ message: 'Sorry, there are no images matching your search query. Please try again!'}))
         .finally(() => {
             form.reset();
             loader.style.display = 'none';
